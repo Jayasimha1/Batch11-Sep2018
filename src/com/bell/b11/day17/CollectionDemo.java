@@ -1,18 +1,47 @@
 package com.bell.b11.day17;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class CollectionDemo {
 
     public static void main(String[] args) {
-        Service s1 = new Service("Cardio", "Bujji");
-        Service s2 = new Service("Pharmasist", "Rajshekar");
-        Service s3 = new Service("Gyno", "Kumar");
-        Service s4 = new Service("Neuro","Vinod");
-        Service s5 = new Service("Dermotology","Malli");
+
+        Doctor d1 = new Doctor("Bujji",2.5,20);
+        Doctor d2 = new Doctor("Malli",3.5,15);
+        Doctor d3 = new Doctor("Kumar",3.5,20);
+        Doctor d4 = new Doctor("Suresh",4.0,12);
+        Doctor d5 = new Doctor("Simha",3.0,20);
+        Doctor d6 = new Doctor("Venkat",3.0,25);
+        Doctor d7 = new Doctor("Sundeep",2.5,10);
+        Doctor d8 = new Doctor("Vinod",3.5,40);
+        Doctor d9 = new Doctor("Siva",3.5,22);
+        Doctor d10 = new Doctor("Ruthvik",3.0,23);
+
+        ArrayList<Doctor> docList1 = new ArrayList<>();
+        docList1.add(d1);
+        docList1.add(d2);
+        ArrayList<Doctor> docList2 = new ArrayList<>();
+        docList2.add(d3);
+        docList2.add(d4);
+        ArrayList<Doctor> docList3 = new ArrayList<>();
+        docList3.add(d5);
+        docList3.add(d6);
+        ArrayList<Doctor> docList4 = new ArrayList<>();
+        docList4.add(d7);
+        docList4.add(d8);
+        ArrayList<Doctor> docList5 = new ArrayList<>();
+        docList5.add(d9);
+        docList5.add(d10);
+
+
+        Service s1 = new Service("Cardio", docList1);
+        Service s2 = new Service("Pharmasist", docList2);
+        Service s3 = new Service("Gyno", docList3);
+        Service s4 = new Service("Neuro",docList4);
+        Service s5 = new Service("Dermotology",docList5);
 
         ArrayList<Service> al1 = new ArrayList<>();
         al1.add(s1);
@@ -38,6 +67,9 @@ public class CollectionDemo {
         hosList.add(h2);
         hosList.add(h3);
 
+        //System.out.println(h1);
+
+
 
         System.out.println("Which service you looking for, ");
         Scanner scan  = new Scanner(System.in);
@@ -46,10 +78,20 @@ public class CollectionDemo {
         for(Hospital h: hosList){
 
            ArrayList<Service> hServices =  h.getServices();
-            System.out.println(hServices);
+           // System.out.println(hServices);
            for(Service s: hServices){
                if(s.getSname().equalsIgnoreCase(serviceLookingFor)){
-                   System.out.println(h.getName() + " is having the service you looking for, please contact 7739457884");
+                   List<Doctor> dList = s.getDoctors();
+                   Doctor bestDoctor = null;
+                   double finalRatting =0;
+                   for(Doctor d:dList){
+                        if(d.getRating()*d.getReviews() >finalRatting){
+                            finalRatting = d.getRating()*d.getReviews();
+                            bestDoctor = d;
+                       }
+
+                   }
+                   System.out.println(h.getName() + " is having the "+ s.getSname()+" service you looking for,"+ bestDoctor+" please contact 7739457884");
                }
            }
 
@@ -112,11 +154,11 @@ class Hospital{
 
 class Service{
     String sname;
-    String drName;
+    ArrayList<Doctor> doctors;
 
-    public Service(String sname, String drName) {
+    public Service(String sname, ArrayList<Doctor> doctors) {
         this.sname = sname;
-        this.drName = drName;
+        this.doctors = doctors;
     }
 
     public String getSname() {
@@ -127,12 +169,12 @@ class Service{
         this.sname = sname;
     }
 
-    public String getDrName() {
-        return drName;
+    public ArrayList<Doctor> getDoctors() {
+        return doctors;
     }
 
-    public void setDrName(String drName) {
-        this.drName = drName;
+    public void setDoctors(ArrayList<Doctor> doctors) {
+        this.doctors = doctors;
     }
 
     @Override
@@ -141,20 +183,82 @@ class Service{
         if (o == null || getClass() != o.getClass()) return false;
         Service service = (Service) o;
         return Objects.equals(sname, service.sname) &&
-                Objects.equals(drName, service.drName);
+                Objects.equals(doctors, service.doctors);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(sname, drName);
+        return Objects.hash(sname, doctors);
     }
 
     @Override
     public String toString() {
         return "Service{" +
                 "sname='" + sname + '\'' +
-                ", drName='" + drName + '\'' +
+                ", doctors='" + doctors + '\'' +
+                '}';
+    }
+}
+
+class Doctor{
+    String drname;
+    double rating;
+    int reviews;
+
+    public Doctor(String drname, double rating, int reviews) {
+        this.drname = drname;
+        this.rating = rating;
+        this.reviews = reviews;
+    }
+
+    public String getDrname() {
+        return drname;
+    }
+
+    public void setDrname(String drname) {
+        this.drname = drname;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return rating == doctor.rating &&
+                reviews == doctor.reviews &&
+                Objects.equals(drname, doctor.drname);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(drname, rating, reviews);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "drname='" + drname + '\'' +
+                ", rating=" + rating +
+                ", reviews=" + reviews +
                 '}';
     }
 }

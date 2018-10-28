@@ -8,6 +8,7 @@ public class PracticeDemo {
         Greeting greetingFunction = () ->{System.out.println("Hello World");};
 
         greetingFunction.perform();
+
         InnerClassTest ict = new InnerClassTest() {
             @Override
             public void foo() {
